@@ -3,20 +3,20 @@ import type { AppLoggerPort } from "@/application/ports/AppLoggerPort";
 
 interface RequiredTableRow {
 	schemaMigrations: string | null;
-	sshAuthAttempts: string | null;
+	sshEvents: string | null;
 }
 
 export class PgHoneypotReadinessGuard {
 	public constructor(
 		private readonly pool: Pool,
-		private readonly logger: AppLoggerPort
+		private readonly logger: AppLoggerPort,
 	) {}
 
 	public async ensureReady(): Promise<void> {
 		const result = await this.pool.query<RequiredTableRow>(`
 			SELECT
 				to_regclass('public.schema_migrations') AS "schemaMigrations",
-				to_regclass('public.ssh_auth_attempts') AS "sshAuthAttempts"
+				to_regclass('public.ssh_events') AS "sshEvents"
 		`);
 
 		const row = result.rows[0];
@@ -26,8 +26,8 @@ export class PgHoneypotReadinessGuard {
 			missingTables.push("schema_migrations");
 		}
 
-		if (!row?.sshAuthAttempts) {
-			missingTables.push("ssh_auth_attempts");
+		if (!row?.sshEvents) {
+			missingTables.push("ssh_events");
 		}
 
 		if (missingTables.length === 0) {
@@ -36,7 +36,7 @@ export class PgHoneypotReadinessGuard {
 		}
 
 		throw new Error(
-			`Missing PostgreSQL tables (${missingTables.join(", ")}). Run 'pnpm migrate' before starting with EVENT_STORE=pg.`
+			`Missing PostgreSQL tables (${missingTables.join(", ")}). Run 'pnpm migrate' before starting with EVENT_STORE=pg.`,
 		);
 	}
 }

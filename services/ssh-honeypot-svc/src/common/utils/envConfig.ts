@@ -12,6 +12,13 @@ const envSchema = z.object({
 
 	SSH_IDENT: z.string().min(1).default("SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.6"),
 
+	SSH_AUTH_BANNER: z
+		.string()
+		.min(1)
+		.default("Authorized access only. Activity on this system is monitored and logged."),
+
+	SSH_COMMON_PASSWORDS: z.string().min(1).default("password,123456,qwerty,admin,root,toor,ubuntu,guest,test"),
+
 	EVENT_STORE: z.enum(["memory", "pg"]).default("memory"),
 
 	PG_HOST: z.string().min(1).default("localhost"),

@@ -14,8 +14,10 @@
 		"migrate": "node --import=tsx src/infrastructure/persistence/migrations/runMigrations.ts",
 		"migrate:up": "pnpm migrate",
 		"check": "biome check --write",
+		"format": "biome format --write .",
 		"test": "vitest run",
-		"test:cov": "vitest run --coverage"
+		"test:cov": "vitest run --coverage",
+		"connect:db": "bash connect-db.sh"
 	},
 	"dependencies": {
 		"dotenv": "17.2.1",

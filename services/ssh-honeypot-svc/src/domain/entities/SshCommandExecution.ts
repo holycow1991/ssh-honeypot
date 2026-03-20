@@ -1,11 +1,10 @@
 import type { SshConnection } from "@/domain/entities/SshConnection";
 
-export class SshAuthenticationAttempt {
+export class SshCommandExecution {
 	public constructor(
 		public readonly connection: SshConnection,
 		public readonly username: string,
-		public readonly method: string,
-		public readonly password: string | undefined,
-		public readonly attemptedAt: Date = new Date(),
+		public readonly command: string,
+		public readonly executedAt: Date = new Date(),
 	) {}
 }

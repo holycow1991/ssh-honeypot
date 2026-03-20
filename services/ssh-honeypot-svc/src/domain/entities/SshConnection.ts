@@ -3,6 +3,6 @@ export class SshConnection {
 		public readonly sourceIp: string,
 		public readonly sourcePort: number,
 		public readonly clientVersion: string,
-		public readonly connectedAt: Date = new Date()
+		public readonly connectedAt: Date = new Date(),
 	) {}
 }
