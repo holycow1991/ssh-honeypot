@@ -23,7 +23,7 @@ jobs:
       - uses: biomejs/setup-biome@454fa0d884737805f48d7dc236c1761a0ac3cc13 # v2
         with:
           version: latest
-      - run: biome ci services/ssh-honeypot-svc
+      - run: biome ci .
 
   lint:
     name: Lint
