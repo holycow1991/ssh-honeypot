@@ -1,10 +1,10 @@
+import { beforeEach, describe, expect, it } from "vitest";
 import { RecordSshAuthenticationAttemptUseCase } from "@/application/use-cases/RecordSshAuthenticationAttemptUseCase";
 import { RecordSshCommandExecutionUseCase } from "@/application/use-cases/RecordSshCommandExecutionUseCase";
 import { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
 import { SshCommandExecution } from "@/domain/entities/SshCommandExecution";
 import { SshConnection } from "@/domain/entities/SshConnection";
 import { InMemorySshEventRepository } from "@/infrastructure/persistence/InMemorySshEventRepository";
-import { beforeEach, describe, expect, it } from "vitest";
 
 const makeConnection = () => new SshConnection("1.2.3.4", 55000, "SSH-2.0-OpenSSH_8.9");
 

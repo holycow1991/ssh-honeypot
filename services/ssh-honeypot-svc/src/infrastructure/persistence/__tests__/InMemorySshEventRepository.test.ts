@@ -1,8 +1,8 @@
+import { beforeEach, describe, expect, it } from "vitest";
 import { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
 import { SshCommandExecution } from "@/domain/entities/SshCommandExecution";
 import { SshConnection } from "@/domain/entities/SshConnection";
 import { InMemorySshEventRepository } from "@/infrastructure/persistence/InMemorySshEventRepository";
-import { beforeEach, describe, expect, it } from "vitest";
 
 const makeConnection = () => new SshConnection("10.0.0.1", 12345, "SSH-2.0-OpenSSH_8.9");
 

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { AppLoggerPort } from "@/application/ports/AppLoggerPort";
 import { AuthenticationDecision } from "@/application/ports/SshRequestEntryPort";
 import { SshRequestEntryService } from "@/application/services/SshRequestEntryService";
@@ -7,7 +8,6 @@ import { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAtt
 import { SshCommandExecution } from "@/domain/entities/SshCommandExecution";
 import { SshConnection } from "@/domain/entities/SshConnection";
 import { InMemorySshEventRepository } from "@/infrastructure/persistence/InMemorySshEventRepository";
-import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const makeLogger = (): AppLoggerPort => ({
 	info: vi.fn(),
@@ -16,8 +16,7 @@ const makeLogger = (): AppLoggerPort => ({
 	error: vi.fn(),
 });
 
-const makeConnection = (ip = "1.2.3.4", port = 55000) =>
-	new SshConnection(ip, port, "SSH-2.0-OpenSSH_8.9");
+const makeConnection = (ip = "1.2.3.4", port = 55000) => new SshConnection(ip, port, "SSH-2.0-OpenSSH_8.9");
 
 const makeAttempt = (username: string, password: string | undefined, method = "password") =>
 	new SshAuthenticationAttempt(makeConnection(), username, method, password);
@@ -35,11 +34,7 @@ describe("SshRequestEntryService", () => {
 		logger = makeLogger();
 		const recordAttempt = new RecordSshAuthenticationAttemptUseCase(repository);
 		const recordCommand = new RecordSshCommandExecutionUseCase(repository);
-		service = new SshRequestEntryService(logger, recordAttempt, recordCommand, [
-			"password",
-			"123456",
-			"admin",
-		]);
+		service = new SshRequestEntryService(logger, recordAttempt, recordCommand, ["password", "123456", "admin"]);
 	});
 
 	describe("handleAuthenticationAttempt", () => {
@@ -59,9 +54,7 @@ describe("SshRequestEntryService", () => {
 		});
 
 		it("rejects non-password auth methods", async () => {
-			const decision = await service.handleAuthenticationAttempt(
-				makeAttempt("root", "password", "publickey"),
-			);
+			const decision = await service.handleAuthenticationAttempt(makeAttempt("root", "password", "publickey"));
 			expect(decision).toBe(AuthenticationDecision.REJECT);
 		});
 
