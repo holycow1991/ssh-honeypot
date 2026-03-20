@@ -1,4 +1,4 @@
-import { SshConnection } from "@/domain/entities/SshConnection";
+import type { SshConnection } from "@/domain/entities/SshConnection";
 
 export class SshAuthenticationAttempt {
 	public constructor(
@@ -6,6 +6,6 @@ export class SshAuthenticationAttempt {
 		public readonly username: string,
 		public readonly method: string,
 		public readonly password: string | undefined,
-		public readonly attemptedAt: Date = new Date()
+		public readonly attemptedAt: Date = new Date(),
 	) {}
 }

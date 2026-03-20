@@ -1,8 +1,8 @@
 import { generateKeyPairSync } from "node:crypto";
-import { AuthContext, Server, ServerChannel, Session } from "ssh2";
-import { AuthenticationDecision, SshRequestEntryPort } from "@/application/ports/SshRequestEntryPort";
-import { HoneypotServerPort } from "@/application/ports/HoneypotServerPort";
-import { AppLoggerPort } from "@/application/ports/AppLoggerPort";
+import { type AuthContext, Server, type ServerChannel, type Session } from "ssh2";
+import type { AppLoggerPort } from "@/application/ports/AppLoggerPort";
+import type { HoneypotServerPort } from "@/application/ports/HoneypotServerPort";
+import { AuthenticationDecision, type SshRequestEntryPort } from "@/application/ports/SshRequestEntryPort";
 import { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
 import { SshCommandExecution } from "@/domain/entities/SshCommandExecution";
 import { SshConnection } from "@/domain/entities/SshConnection";
@@ -20,7 +20,7 @@ export class SshHoneypotServer implements HoneypotServerPort {
 	public constructor(
 		private readonly config: SshHoneypotServerConfig,
 		private readonly requestEntry: SshRequestEntryPort,
-		private readonly logger: AppLoggerPort
+		private readonly logger: AppLoggerPort,
 	) {}
 
 	public start(): void {
@@ -37,11 +37,7 @@ export class SshHoneypotServer implements HoneypotServerPort {
 			},
 			(client, info) => {
 				let authenticatedUsername: string | undefined;
-				const connection = new SshConnection(
-					info.ip,
-					info.port,
-					info.header.versions.software ?? "unknown"
-				);
+				const connection = new SshConnection(info.ip, info.port, info.header.versions.software ?? "unknown");
 
 				this.requestEntry.handleConnection(connection);
 
@@ -72,7 +68,7 @@ export class SshHoneypotServer implements HoneypotServerPort {
 				client.on("end", () => {
 					this.requestEntry.handleClientDisconnected(connection);
 				});
-			}
+			},
 		);
 
 		this.server.on("error", (error: unknown) => {
@@ -126,7 +122,7 @@ export class SshHoneypotServer implements HoneypotServerPort {
 	private async handleAuthentication(
 		ctx: AuthContext,
 		connection: SshConnection,
-		onAccepted: (username: string) => void
+		onAccepted: (username: string) => void,
 	): Promise<void> {
 		const password = this.extractPassword(ctx);
 		const attempt = new SshAuthenticationAttempt(connection, ctx.username, ctx.method, password);
@@ -150,7 +146,7 @@ export class SshHoneypotServer implements HoneypotServerPort {
 		session: Session,
 		client: { end(): void },
 		connection: SshConnection,
-		username: string
+		username: string,
 	): void {
 		session.on("pty", (accept) => {
 			accept();
@@ -191,7 +187,7 @@ export class SshHoneypotServer implements HoneypotServerPort {
 		channel: ServerChannel,
 		client: { end(): void },
 		connection: SshConnection,
-		username: string
+		username: string,
 	): void {
 		let commandBuffer = "";
 		let commandQueue = Promise.resolve();

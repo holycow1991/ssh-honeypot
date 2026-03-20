@@ -1,7 +1,7 @@
-import { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
-import { SshCommandExecution } from "@/domain/entities/SshCommandExecution";
 import type { Pool } from "pg";
-import { SshEventRepositoryPort } from "@/domain/ports/SshEventRepositoryPort";
+import type { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
+import type { SshCommandExecution } from "@/domain/entities/SshCommandExecution";
+import type { SshEventRepositoryPort } from "@/domain/ports/SshEventRepositoryPort";
 
 export class PgSshEventRepository implements SshEventRepositoryPort {
 	public constructor(private readonly pool: Pool) {}
@@ -23,7 +23,7 @@ export class PgSshEventRepository implements SshEventRepositoryPort {
 					password: attempt.password,
 					attemptedAt: attempt.attemptedAt.toISOString(),
 				}),
-			]
+			],
 		);
 	}
 
@@ -43,7 +43,7 @@ export class PgSshEventRepository implements SshEventRepositoryPort {
 					command: commandExecution.command,
 					executedAt: commandExecution.executedAt.toISOString(),
 				}),
-			]
+			],
 		);
 	}
 }

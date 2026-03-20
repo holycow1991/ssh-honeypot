@@ -9,7 +9,7 @@ interface RequiredTableRow {
 export class PgHoneypotReadinessGuard {
 	public constructor(
 		private readonly pool: Pool,
-		private readonly logger: AppLoggerPort
+		private readonly logger: AppLoggerPort,
 	) {}
 
 	public async ensureReady(): Promise<void> {
@@ -36,7 +36,7 @@ export class PgHoneypotReadinessGuard {
 		}
 
 		throw new Error(
-			`Missing PostgreSQL tables (${missingTables.join(", ")}). Run 'pnpm migrate' before starting with EVENT_STORE=pg.`
+			`Missing PostgreSQL tables (${missingTables.join(", ")}). Run 'pnpm migrate' before starting with EVENT_STORE=pg.`,
 		);
 	}
 }

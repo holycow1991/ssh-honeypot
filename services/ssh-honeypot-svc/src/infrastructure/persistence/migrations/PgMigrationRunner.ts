@@ -6,7 +6,7 @@ import type { AppLoggerPort } from "@/application/ports/AppLoggerPort";
 export class PgMigrationRunner {
 	public constructor(
 		private readonly pool: Pool,
-		private readonly logger: AppLoggerPort
+		private readonly logger: AppLoggerPort,
 	) {}
 
 	public async run(migrationsDirectory: string): Promise<void> {

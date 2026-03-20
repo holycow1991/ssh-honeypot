@@ -1,10 +1,10 @@
-import { AppLoggerPort } from "@/application/ports/AppLoggerPort";
-import { HoneypotServerPort } from "@/application/ports/HoneypotServerPort";
+import type { AppLoggerPort } from "@/application/ports/AppLoggerPort";
+import type { HoneypotServerPort } from "@/application/ports/HoneypotServerPort";
 import { SshRequestEntryService } from "@/application/services/SshRequestEntryService";
 import { RecordSshAuthenticationAttemptUseCase } from "@/application/use-cases/RecordSshAuthenticationAttemptUseCase";
 import { RecordSshCommandExecutionUseCase } from "@/application/use-cases/RecordSshCommandExecutionUseCase";
 import { env } from "@/common/utils/envConfig";
-import { SshEventRepositoryPort } from "@/domain/ports/SshEventRepositoryPort";
+import type { SshEventRepositoryPort } from "@/domain/ports/SshEventRepositoryPort";
 import { PinoAppLogger } from "@/infrastructure/logging/PinoAppLogger";
 import { InMemorySshEventRepository } from "@/infrastructure/persistence/InMemorySshEventRepository";
 import { PgSshEventRepository } from "@/infrastructure/persistence/PgSshEventRepository";
@@ -17,7 +17,7 @@ export class HoneypotRuntime {
 		private readonly server: HoneypotServerPort,
 		private readonly logger: AppLoggerPort,
 		private readonly startupChecks: Array<() => Promise<void>>,
-		private readonly shutdownHooks: Array<() => Promise<void>>
+		private readonly shutdownHooks: Array<() => Promise<void>>,
 	) {}
 
 	public async start(): Promise<void> {
@@ -67,7 +67,7 @@ const createMemoryEventRepository = (): SshEventRepositoryPort => new InMemorySs
 const createPgEventRepository = (
 	logger: AppLoggerPort,
 	startupChecks: Array<() => Promise<void>>,
-	shutdownHooks: Array<() => Promise<void>>
+	shutdownHooks: Array<() => Promise<void>>,
 ): SshEventRepositoryPort => {
 	const poolProvider = new PgPoolProvider({
 		host: env.PG_HOST,
@@ -89,7 +89,7 @@ const createPgEventRepository = (
 const selectEventRepository = (
 	logger: AppLoggerPort,
 	startupChecks: Array<() => Promise<void>>,
-	shutdownHooks: Array<() => Promise<void>>
+	shutdownHooks: Array<() => Promise<void>>,
 ): SshEventRepositoryPort => {
 	if (env.EVENT_STORE === "pg") {
 		return createPgEventRepository(logger, startupChecks, shutdownHooks);
@@ -115,7 +115,7 @@ const createHoneypotRuntime = (): HoneypotRuntime => {
 		logger,
 		recordAttemptUseCase,
 		recordCommandUseCase,
-		parseCommonPasswords(env.SSH_COMMON_PASSWORDS)
+		parseCommonPasswords(env.SSH_COMMON_PASSWORDS),
 	);
 	const server = new SshHoneypotServer(
 		{
@@ -125,7 +125,7 @@ const createHoneypotRuntime = (): HoneypotRuntime => {
 			banner: env.SSH_AUTH_BANNER,
 		},
 		requestEntry,
-		logger
+		logger,
 	);
 
 	return new HoneypotRuntime(server, logger, startupChecks, shutdownHooks);

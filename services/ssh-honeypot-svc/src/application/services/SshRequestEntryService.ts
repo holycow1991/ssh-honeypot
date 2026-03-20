@@ -1,15 +1,15 @@
-import { AppLoggerPort } from "@/application/ports/AppLoggerPort";
+import type { AppLoggerPort } from "@/application/ports/AppLoggerPort";
 import {
 	AuthenticationDecision,
-	ShellCommandResult,
-	ShellSessionView,
-	SshRequestEntryPort,
+	type ShellCommandResult,
+	type ShellSessionView,
+	type SshRequestEntryPort,
 } from "@/application/ports/SshRequestEntryPort";
-import { RecordSshAuthenticationAttemptUseCase } from "@/application/use-cases/RecordSshAuthenticationAttemptUseCase";
-import { RecordSshCommandExecutionUseCase } from "@/application/use-cases/RecordSshCommandExecutionUseCase";
-import { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
-import { SshCommandExecution } from "@/domain/entities/SshCommandExecution";
-import { SshConnection } from "@/domain/entities/SshConnection";
+import type { RecordSshAuthenticationAttemptUseCase } from "@/application/use-cases/RecordSshAuthenticationAttemptUseCase";
+import type { RecordSshCommandExecutionUseCase } from "@/application/use-cases/RecordSshCommandExecutionUseCase";
+import type { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
+import type { SshCommandExecution } from "@/domain/entities/SshCommandExecution";
+import type { SshConnection } from "@/domain/entities/SshConnection";
 
 export class SshRequestEntryService implements SshRequestEntryPort {
 	private readonly acceptedPasswords: Set<string>;
@@ -18,10 +18,10 @@ export class SshRequestEntryService implements SshRequestEntryPort {
 		private readonly logger: AppLoggerPort,
 		private readonly recordAttemptUseCase: RecordSshAuthenticationAttemptUseCase,
 		private readonly recordCommandUseCase: RecordSshCommandExecutionUseCase,
-		commonPasswords: readonly string[]
+		commonPasswords: readonly string[],
 	) {
 		this.acceptedPasswords = new Set(
-			commonPasswords.map((password) => password.trim()).filter((password) => password.length > 0)
+			commonPasswords.map((password) => password.trim()).filter((password) => password.length > 0),
 		);
 	}
 
@@ -42,9 +42,7 @@ export class SshRequestEntryService implements SshRequestEntryPort {
 
 		await this.recordAttemptUseCase.execute(attempt);
 
-		const decision = this.shouldAcceptAttempt(attempt)
-			? AuthenticationDecision.ACCEPT
-			: AuthenticationDecision.REJECT;
+		const decision = this.shouldAcceptAttempt(attempt) ? AuthenticationDecision.ACCEPT : AuthenticationDecision.REJECT;
 
 		if (decision === AuthenticationDecision.ACCEPT) {
 			this.logger.info("Accepted honeypot authentication", {
@@ -115,8 +113,7 @@ export class SshRequestEntryService implements SshRequestEntryPort {
 				return { output: "^C", prompt, closeSession: false };
 			case "help":
 				return {
-					output:
-						"Supported commands: help, whoami, id, pwd, uname -a, ls, ls -la, cat /etc/passwd, ps, exit, logout",
+					output: "Supported commands: help, whoami, id, pwd, uname -a, ls, ls -la, cat /etc/passwd, ps, exit, logout",
 					prompt,
 					closeSession: false,
 				};
@@ -178,11 +175,9 @@ export class SshRequestEntryService implements SshRequestEntryPort {
 				};
 			case "ps":
 				return {
-					output: [
-						"  PID TTY          TIME CMD",
-						"  922 pts/0    00:00:00 bash",
-						" 1044 pts/0    00:00:00 ps",
-					].join("\n"),
+					output: ["  PID TTY          TIME CMD", "  922 pts/0    00:00:00 bash", " 1044 pts/0    00:00:00 ps"].join(
+						"\n",
+					),
 					prompt,
 					closeSession: false,
 				};

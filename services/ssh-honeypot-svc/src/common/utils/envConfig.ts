@@ -17,10 +17,7 @@ const envSchema = z.object({
 		.min(1)
 		.default("Authorized access only. Activity on this system is monitored and logged."),
 
-	SSH_COMMON_PASSWORDS: z
-		.string()
-		.min(1)
-		.default("password,123456,qwerty,admin,root,toor,ubuntu,guest,test"),
+	SSH_COMMON_PASSWORDS: z.string().min(1).default("password,123456,qwerty,admin,root,toor,ubuntu,guest,test"),
 
 	EVENT_STORE: z.enum(["memory", "pg"]).default("memory"),
 

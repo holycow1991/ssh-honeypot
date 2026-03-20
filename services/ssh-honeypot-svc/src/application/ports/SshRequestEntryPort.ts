@@ -1,6 +1,6 @@
-import { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
-import { SshCommandExecution } from "@/domain/entities/SshCommandExecution";
-import { SshConnection } from "@/domain/entities/SshConnection";
+import type { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
+import type { SshCommandExecution } from "@/domain/entities/SshCommandExecution";
+import type { SshConnection } from "@/domain/entities/SshConnection";
 
 export enum AuthenticationDecision {
 	ACCEPT = "accept",

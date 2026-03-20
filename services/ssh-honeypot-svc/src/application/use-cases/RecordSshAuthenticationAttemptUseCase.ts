@@ -1,5 +1,5 @@
-import { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
-import { SshEventRepositoryPort } from "@/domain/ports/SshEventRepositoryPort";
+import type { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
+import type { SshEventRepositoryPort } from "@/domain/ports/SshEventRepositoryPort";
 
 export class RecordSshAuthenticationAttemptUseCase {
 	public constructor(private readonly eventRepository: SshEventRepositoryPort) {}

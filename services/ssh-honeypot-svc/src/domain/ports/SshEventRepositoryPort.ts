@@ -1,5 +1,5 @@
-import { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
-import { SshCommandExecution } from "@/domain/entities/SshCommandExecution";
+import type { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
+import type { SshCommandExecution } from "@/domain/entities/SshCommandExecution";
 
 export interface SshEventRepositoryPort {
 	saveAuthenticationAttempt(attempt: SshAuthenticationAttempt): Promise<void>;

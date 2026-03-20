@@ -1,5 +1,5 @@
-import { pino, type Logger } from "pino";
-import { AppLoggerPort } from "@/application/ports/AppLoggerPort";
+import { type Logger, pino } from "pino";
+import type { AppLoggerPort } from "@/application/ports/AppLoggerPort";
 
 export class PinoAppLogger implements AppLoggerPort {
 	private readonly logger: Logger;

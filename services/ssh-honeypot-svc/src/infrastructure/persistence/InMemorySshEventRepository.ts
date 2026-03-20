@@ -1,6 +1,6 @@
-import { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
-import { SshCommandExecution } from "@/domain/entities/SshCommandExecution";
-import { SshEventRepositoryPort } from "@/domain/ports/SshEventRepositoryPort";
+import type { SshAuthenticationAttempt } from "@/domain/entities/SshAuthenticationAttempt";
+import type { SshCommandExecution } from "@/domain/entities/SshCommandExecution";
+import type { SshEventRepositoryPort } from "@/domain/ports/SshEventRepositoryPort";
 
 export class InMemorySshEventRepository implements SshEventRepositoryPort {
 	private readonly attempts: SshAuthenticationAttempt[] = [];
