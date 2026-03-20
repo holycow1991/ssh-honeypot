@@ -2,6 +2,7 @@ import { AppLoggerPort } from "@/application/ports/AppLoggerPort";
 import { HoneypotServerPort } from "@/application/ports/HoneypotServerPort";
 import { SshRequestEntryService } from "@/application/services/SshRequestEntryService";
 import { RecordSshAuthenticationAttemptUseCase } from "@/application/use-cases/RecordSshAuthenticationAttemptUseCase";
+import { RecordSshCommandExecutionUseCase } from "@/application/use-cases/RecordSshCommandExecutionUseCase";
 import { env } from "@/common/utils/envConfig";
 import { SshEventRepositoryPort } from "@/domain/ports/SshEventRepositoryPort";
 import { PinoAppLogger } from "@/infrastructure/logging/PinoAppLogger";
@@ -97,18 +98,31 @@ const selectEventRepository = (
 	return createMemoryEventRepository();
 };
 
+const parseCommonPasswords = (csvPasswords: string): string[] =>
+	csvPasswords
+		.split(",")
+		.map((password) => password.trim())
+		.filter((password) => password.length > 0);
+
 const createHoneypotRuntime = (): HoneypotRuntime => {
 	const startupChecks: Array<() => Promise<void>> = [];
 	const shutdownHooks: Array<() => Promise<void>> = [];
 	const logger = new PinoAppLogger("ssh-honeypot");
 	const eventRepository = selectEventRepository(logger, startupChecks, shutdownHooks);
 	const recordAttemptUseCase = new RecordSshAuthenticationAttemptUseCase(eventRepository);
-	const requestEntry = new SshRequestEntryService(logger, recordAttemptUseCase);
+	const recordCommandUseCase = new RecordSshCommandExecutionUseCase(eventRepository);
+	const requestEntry = new SshRequestEntryService(
+		logger,
+		recordAttemptUseCase,
+		recordCommandUseCase,
+		parseCommonPasswords(env.SSH_COMMON_PASSWORDS)
+	);
 	const server = new SshHoneypotServer(
 		{
 			host: env.HOST,
 			port: env.SSH_PORT,
 			ident: env.SSH_IDENT,
+			banner: env.SSH_AUTH_BANNER,
 		},
 		requestEntry,
 		logger

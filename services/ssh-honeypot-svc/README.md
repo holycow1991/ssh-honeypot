@@ -1,119 +1,124 @@
-# 🚀 Express TypeScript Boilerplate 2025
+# 🍯 SSH Honeypot Service
 
-[![CI](https://github.com/edwinhern/express-typescript/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/edwinhern/express-typescript-2024/actions/workflows/ci.yml)
+A lightweight SSH honeypot that listens for incoming SSH connections, logs authentication attempts, and stores events.
 
-```code
-Hey There! 🙌
-🤾 that ⭐️ button if you like this boilerplate.
+## 🚀 Getting Started
+
+### Step 1: Install dependencies
+
+```bash
+pnpm install
 ```
 
-## 🌟 Introduction
+### Step 2: Configure environment
 
-Welcome to Express TypeScript Boilerplate 2025 – a simple and ready-to-use starting point for building backend web services with Express.js and TypeScript.
+```bash
+cp .env.template .env
+```
 
-## 💡 Why We Made This
+Edit `.env` and fill in your values:
 
-This starter kit helps you:
+```env
+NODE_ENV="development"
+HOST="0.0.0.0"
+SSH_PORT="2222"
+EVENT_STORE="pg"        # 'memory' or 'pg'
 
-- ✨ Start new projects faster
-- 📊 Write clean, consistent code
-- ⚡ Build things quickly
-- 🛡️ Follow best practices for security and testing
+PG_HOST="localhost"
+PG_PORT="5432"
+PG_USER="honeypot"
+PG_PASSWORD="honeypot"
+PG_DATABASE="honeypot"
+```
 
-## 🚀 What's Included
+### Step 3: Run database migrations
 
-- 📁 Well-organized folders: Files grouped by feature so you can find things easily
-- 💨 Fast development: Quick code running with `tsx` and error checking with `tsc`
-- 🌐 Latest Node.js: Uses the newest stable Node.js version from `.tool-versions`
-- 🔧 Safe settings: Environment settings checked with Zod to prevent errors
-- 🔗 Short import paths: Clean code with easy imports using path shortcuts
-- 🔄 Auto-updates: Keeps dependencies up-to-date with Renovate
-- 🔒 Better security: Built-in protection with Helmet and CORS settings
-- 📊 Easy tracking: Built-in logging with `pino-http`
-- 🧪 Ready-to-test: Testing tools with Vitest and Supertest already set up
-- ✅ Clean code: Consistent coding style with `Biomejs`
-- 📃 Standard responses: Unified API responses using `ServiceResponse`
-- 🐳 Easy deployment: Ready for Docker containers
-- 📝 Input checking: Request validation using Zod
-- 🧩 API browser: Interactive API docs with Swagger UI
+```bash
+pnpm migrate
+```
 
-## 🛠️ Getting Started
+### Step 4: Start the service
 
-### Video Demo
+```bash
+# Development
+pnpm start:dev
 
-For a visual guide, watch the [video demo](https://github.com/user-attachments/assets/b1698dac-d582-45a0-8d61-31131732b74e) to see the setup and running of the project.
-
-### Step-by-Step Guide
-
-#### Step 1: 🚀 Initial Setup
-
-- Clone the repository: `git clone https://github.com/edwinhern/express-typescript.git`
-- Navigate: `cd express-typescript`
-- Install dependencies: `pnpm install`
-
-#### Step 2: ⚙️ Environment Configuration
-
-- Create `.env`: Copy `.env.template` to `.env`
-- Update `.env`: Fill in necessary environment variables
-
-#### Step 3: 🏃‍♂️ Running the Project
-
-- Development Mode: `pnpm start:dev`
-- Building: `pnpm build`
-- Production Mode: Set `NODE_ENV="production"` in `.env` then `pnpm build && pnpm start:prod`
-
-## 🤝 Feedback and Contributions
-
-We'd love to hear your feedback and suggestions for further improvements. Feel free to contribute and join us in making backend development cleaner and faster!
-
-🎉 Happy coding!
+# Production
+pnpm build && pnpm start:prod
+```
 
 ## 📁 Folder Structure
 
-```code
-├── biome.json
-├── Dockerfile
-├── LICENSE
-├── package.json
-├── pnpm-lock.yaml
-├── README.md
-├── src
-│   ├── api
-│   │   ├── healthCheck
-│   │   │   ├── __tests__
-│   │   │   │   └── healthCheckRouter.test.ts
-│   │   │   └── healthCheckRouter.ts
-│   │   └── user
-│   │       ├── __tests__
-│   │       │   ├── userRouter.test.ts
-│   │       │   └── userService.test.ts
-│   │       ├── userController.ts
-│   │       ├── userModel.ts
-│   │       ├── userRepository.ts
-│   │       ├── userRouter.ts
-│   │       └── userService.ts
-│   ├── api-docs
-│   │   ├── __tests__
-│   │   │   └── openAPIRouter.test.ts
-│   │   ├── openAPIDocumentGenerator.ts
-│   │   ├── openAPIResponseBuilders.ts
-│   │   └── openAPIRouter.ts
-│   ├── common
-│   │   ├── __tests__
-│   │   │   ├── errorHandler.test.ts
-│   │   │   └── requestLogger.test.ts
-│   │   ├── middleware
-│   │   │   ├── errorHandler.ts
-│   │   │   ├── rateLimiter.ts
-│   │   │   └── requestLogger.ts
-│   │   ├── models
-│   │   │   └── serviceResponse.ts
-│   │   └── utils
-│   │       ├── commonValidation.ts
-│   │       ├── envConfig.ts
-│   │       └── httpHandlers.ts
-│   ├── index.ts
-│   └── server.ts
-├── tsconfig.json
-└── vite.config.mts
+```
+src/
+├── application/
+│   ├── ports/
+│   ├── services/
+│   └── use-cases/
+├── domain/
+├── infrastructure/
+│   ├── logging/
+│   ├── persistence/
+│   └── server/
+├── index.ts
+└── server.ts
+migrations/
+```
+
+## 🐘 PostgreSQL
+
+### Install psql (Manjaro & Arch)
+
+```bash
+sudo pacman -S postgresql-libs   # client only
+# or
+sudo pacman -S postgresql         # full install
+```
+
+### Connect to the database
+
+```bash
+# Using the npm script
+pnpm connect:db
+
+# Or manually
+source .env && psql "postgresql://${PG_USER}:${PG_PASSWORD}@${PG_HOST}:${PG_PORT}/${PG_DATABASE}"
+```
+
+### Useful psql commands
+
+| Command        | Description                     |
+| -------------- | ------------------------------- |
+| `\l`           | List all databases              |
+| `\c dbname`    | Switch to database              |
+| `\dt`          | List all tables                 |
+| `\d tablename` | Describe table (columns, types) |
+| `\dn`          | List schemas                    |
+| `\du`          | List users/roles                |
+| `\x`           | Toggle expanded output          |
+| `\timing`      | Toggle query execution time     |
+| `\i file.sql`  | Execute SQL from file           |
+| `\q`           | Quit                            |
+
+### Useful SQL queries
+
+```sql
+-- Current database and user
+SELECT current_database(), current_user;
+
+-- Table sizes
+SELECT relname, n_live_tup FROM pg_stat_user_tables ORDER BY n_live_tup DESC;
+
+-- Active connections
+SELECT * FROM pg_stat_activity;
+
+-- Kill a connection
+SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'honeypot';
+```
+
+## 🐳 Docker
+
+```bash
+docker build -t ssh-honeypot-svc .
+docker run -p 2222:2222 --env-file .env ssh-honeypot-svc
 ```
